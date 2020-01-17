@@ -1,34 +1,41 @@
 #include <ctype.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "isogram.h"
 
 #define TABSIZE 26
 
-void
-bitmap_toggle(int bitmap, int pos) {
+unsigned bitmap_toggle(unsigned, unsigned);
+bool bitmap_isset(unsigned, unsigned);
 
+unsigned
+bitmap_toggle(unsigned bitmap, unsigned pos)
+{
+    return bitmap ^ ((unsigned) 1 << pos);
 }
 
 bool
-is_isogram(const char phrase[]) {
+bitmap_isset(unsigned bitmap, unsigned pos)
+{
+    return (bitmap & ((unsigned) 1 << pos)) > 0;
+}
+
+bool
+is_isogram(const char phrase[])
+{
     if (!phrase)
         return false;
 
-    bool chartab[TABSIZE];
-    for (int i = 0; i < TABSIZE; i++) {
-        chartab[i] = false;
-    }
+//    bool chartab[TABSIZE];
+    unsigned bitmap = 0;
 
-    const char *pp = phrase;
+    const char* pp = phrase;
     while (*pp) {
         unsigned idx = tolower(*pp) - 'a';
         if (idx <= TABSIZE) {
-            if (chartab[idx])
+            if (bitmap_isset(bitmap, idx))
                 return false;
             else
-                chartab[idx] = true;
+                bitmap = bitmap_toggle(bitmap, idx);
         }
         pp++;
     }
