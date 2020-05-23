@@ -3,12 +3,12 @@
 
 #include "matching_brackets.h"
 
-struct stack_item* stack_push(struct stack_item *, int);
-char stack_pop(struct stack_item**);
-bool is_pairing(const char, const char);
+struct stack_item* stack_push (struct stack_item*, int);
+char               stack_pop (struct stack_item**);
+bool               is_pairing (const char, const char);
 
 struct stack_item {
-    char item;
+    char               item;
     struct stack_item* next;
 };
 
@@ -28,9 +28,9 @@ stack_pop (struct stack_item** headp)
         return '\0';
 
     struct stack_item* old_head = (*headp);
-    const char c = old_head->item;
+    const char         c = old_head->item;
     (*headp) = old_head->next;
-    free(old_head);
+    free (old_head);
 
     return c;
 }
@@ -43,7 +43,7 @@ is_pairing (const char open, const char close)
 {
     static const char* open_brackets = OPEN_BRACKETS;
     static const char* close_brackets = CLOS_BRACKETS;
-    static const int len = sizeof(OPEN_BRACKETS);
+    static const int   len = sizeof (OPEN_BRACKETS);
 
     int i = 0;
     while (open != open_brackets[i] && i < len)
@@ -52,19 +52,19 @@ is_pairing (const char open, const char close)
 }
 
 bool
-is_paired (const char *input)
+is_paired (const char* input)
 {
     struct stack_item* stack_head = NULL;
 
     while (*input) {
         if (strchr (OPEN_BRACKETS, *input) != NULL) {
             // if in the set of opening brackets
-            stack_head = stack_push(stack_head, *input);
+            stack_head = stack_push (stack_head, *input);
         } else if (strchr (CLOS_BRACKETS, *input) != NULL) {
             // if in the set of closing brackets
             int c = stack_pop (&stack_head);
             if (!is_pairing (c, *input))
-                    return false;
+                return false;
         }
         input++;
     }
